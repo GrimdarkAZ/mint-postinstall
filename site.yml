@@ -1,0 +1,7 @@
+---
+  - name: Post-Install Configure Linux Mint
+    hosts: localhost
+    become: true
+    roles:
+      - common
+
