@@ -2,9 +2,6 @@
   ansible.builtin.apt_key:
     url: https://dl.google.com/linux/linux_signing_key.pub
     state: present
-# - name: Install Google APT Key
-#   ansible.builtin.command:
-#     cmd: wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
 - name: Add Google Chrome Repository
   ansible.builtin.apt_repository:
     repo: deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main
@@ -17,16 +14,10 @@
     state: present
 - name: Add VSCode repo
   ansible.builtin.apt_repository:
-    repo: deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main
+    repo: deb [arch=amd64] https://packages.microsoft.com/repos/code stable main
     filename: vscode.list
     state: present
     update_cache: true
-# - name: Download Microsoft APT Key
-#   ansible.builtin.command:
-#     cmd: wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /tmp/packages.microsoft.gpg
-# - name: Install Microsoft APT Key
-#   ansible.builtin.command:
-#     command: install -D -o root -g root -m 644 /tmp/packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg
 - name: Install Github CLI
   block:
     - name: Get Github CLI Repository Key
@@ -34,7 +25,7 @@
         url: https://cli.github.com/packages/githubcli-archive-keyring.gpg
         dest: /usr/share/keyrings/githubcli-archive-keyring.gpg
     - name: Create Github CLI Repository
-      ansible.builtin.apt_respository:
+      ansible.builtin.apt_repository:
         repo: deb [arch=amd64 signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main
         filename: github-cli.list
         state: present
@@ -46,6 +37,7 @@
 - name: Install Packages
   ansible.builtin.apt:
     name:
+      - vim
       - code
       - google-chrome-stable
       - nala
@@ -55,3 +47,10 @@
   ansible.builtin.apt:
     deb: /tmp/discord.deb
     state: present
+- name: Copy wallpaper
+  ansible.builtin.copy:
+    src: samurai-wallpaper1080p.jpg
+    dest: /home/grimdark/Pictures/samurai-wallpaper1080p.jpg 
+- name: Set wallpaper
+  command:
+    cmd: gsettings set org.cinnamon.desktop.background picture-uri "file:///home/grimdark/Pictures/samurai-wallpaper1080p.jpg"
